@@ -1,0 +1,49 @@
+# Executive Summary: {{ experiment_name }}
+
+**Date Generated:** {{ date_generated }}
+
+---
+
+## Primary Result
+
+**Conditional Conversion Rate (Orders / Adders)**
+
+| Metric | Control | Treatment | Change |
+|--------|---------|-----------|--------|
+| **CCR** | {{ ccr_control }}% | {{ ccr_treatment }}% | **{{ lift_abs }}pp** ({{ lift_rel }}% relative) |
+
+**Statistical Significance:**
+- **95% Confidence Interval:** [{{ ci_low }}pp, {{ ci_high }}pp]
+- **p-value:** {{ p_value }}
+- **Result:** {{ primary_result }}
+
+---
+
+## Guardrail Metrics
+
+{{ guardrails_table }}
+
+---
+
+## Decision
+
+### **{{ decision }}**
+
+**Recommendation:** {{ ship_or_not }}
+
+---
+
+## Key Diagnostics
+
+{{ key_diagnostics_bullets }}
+
+---
+
+## Next Steps
+
+{{ next_steps }}
+
+---
+
+*This summary is generated from A/B test results. For detailed analysis, see the full report at `reports/REPORT.md` or explore the interactive dashboard.*
+

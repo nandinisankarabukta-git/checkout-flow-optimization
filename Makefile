@@ -1,4 +1,4 @@
-.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3 simulate build marts quality stats results report app sensitivity pipeline
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -29,10 +29,16 @@ requirements: test_environment
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
-## Delete all compiled Python files
+## Delete all compiled Python files, generated data, and DuckDB files
 clean:
+	@echo "Cleaning project..."
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
+	rm -rf data/raw/*
+	rm -rf data/quarantine/*
+	rm -f duckdb/warehouse.duckdb duckdb/warehouse.duckdb.wal
+	rm -f reports/figures/*.csv reports/figures/*.png
+	@echo "Clean complete! Removed generated data and DuckDB files"
 
 ## Lint using flake8
 lint:
@@ -80,7 +86,77 @@ test_environment:
 # PROJECT RULES                                                                 #
 #################################################################################
 
+## Generate synthetic checkout funnel data (4 days, 10k users/day)
+simulate:
+	@echo "Starting data simulation..."
+	@source .venv/bin/activate && python src/data/simulate.py \
+		--start 2025-01-01 \
+		--days 4 \
+		--users 10000 \
+		--uplift 0.02 \
+		--seed 7
+	@echo ""
+	@echo "Simulation complete! Data written to: $(PROJECT_DIR)/data/raw"
 
+## Build DuckDB schema and register event views
+build:
+	@echo "Building DuckDB schema..."
+	@source .venv/bin/activate && python -c "import duckdb; conn = duckdb.connect(); conn.execute(open('sql/schema.sql').read()); conn.close()"
+	@echo "Schema built successfully! Database: $(PROJECT_DIR)/duckdb/warehouse.duckdb"
+
+## Build analytical mart tables
+marts:
+	@echo "Building analytical marts..."
+	@source .venv/bin/activate && python -c "import duckdb; conn = duckdb.connect(); \
+		conn.execute(open('sql/marts/fct_experiments.sql').read()); \
+		conn.execute(open('sql/marts/fct_checkout_steps.sql').read()); \
+		conn.execute(open('sql/marts/fct_orders.sql').read()); \
+		conn.close()"
+	@echo "Marts built successfully! Tables: fct_experiments, fct_checkout_steps, fct_orders"
+
+## Run data quality checks
+quality:
+	@source .venv/bin/activate && python src/quality.py && echo "" && echo "All data quality checks passed!"
+
+## Run statistical analysis on most recent date
+stats:
+	@source .venv/bin/activate && python src/analysis/run_stats.py && echo "" && echo "Statistical analysis complete!"
+
+## Save statistical results to JSON and CSV files
+results:
+	@source .venv/bin/activate && python src/analysis/save_results.py && echo "Results saved to: $(PROJECT_DIR)/reports/results"
+
+## Generate compact markdown report with primary metric and guardrails
+report:
+	@echo "Generating report..."
+	@source .venv/bin/activate && python src/report.py
+
+## Launch Streamlit dashboard
+app:
+	@echo "Launching Streamlit dashboard..."
+	@echo "Local URL: http://localhost:8501"
+	@source .venv/bin/activate && streamlit run src/dashboard.py --server.port 8501 --server.headless true
+
+## Run sensitivity analysis to compute CCR detection rates across parameter grid
+sensitivity:
+	@echo "Running sensitivity analysis..."
+	@source .venv/bin/activate && python src/analysis/sensitivity.py \
+		--start 2025-02-01 \
+		--days 1 \
+		--users "20000,50000" \
+		--uplifts "0.0,0.02" \
+		--repeats 10 \
+		--seed 7
+	@echo "Sensitivity results saved to: $(PROJECT_DIR)/reports/results/sensitivity_summary.csv"
+
+## Run complete analysis pipeline from data generation to final report
+pipeline: simulate build marts quality results report
+	@echo ""
+	@echo "================================================================================"
+	@echo "PIPELINE COMPLETE!"
+	@echo "================================================================================"
+	@echo "Final report available at: $(PROJECT_DIR)/reports/REPORT.md"
+	@echo "================================================================================"
 
 #################################################################################
 # Self Documenting Commands                                                     #

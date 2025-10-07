@@ -1,0 +1,29 @@
+{
+  "date": "2025-01-04",
+  "payment_authorization": {
+    "control": {
+      "rate": 0.9176122348297977,
+      "ci_low": 0.9056423449229034,
+      "ci_high": 0.929582124736692,
+      "authorized": 1860,
+      "total_attempts": 2027
+    },
+    "treatment": {
+      "rate": 0.9290322580645162,
+      "ci_low": 0.9178207395983682,
+      "ci_high": 0.9402437765306642,
+      "authorized": 1872,
+      "total_attempts": 2015
+    }
+  },
+  "average_order_value": {
+    "control": {
+      "mean": 256.8234623655916,
+      "count": 1860
+    },
+    "treatment": {
+      "mean": 259.1855264564406,
+      "count": 1871
+    }
+  }
+}

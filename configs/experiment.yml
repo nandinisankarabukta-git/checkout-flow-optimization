@@ -1,0 +1,69 @@
+# Experiment Configuration for Checkout Flow Optimization
+# Defines experiment parameters, dates, and statistical settings
+
+experiment:
+  name: checkout_redesign_v1
+  description: "A/B test evaluating redesigned checkout flow against control"
+  
+  # Experiment Timeline
+  start: "2025-01-01"
+  end: "2025-01-14"
+  duration_days: 14
+  
+  # Baseline Metrics
+  baseline_ccr: 0.35  # Baseline conditional conversion rate (35%)
+  
+  # Statistical Parameters
+  mde_abs: 0.015      # Minimum detectable effect (absolute, 1.5 percentage points)
+  alpha: 0.05         # Significance level (5% false positive rate)
+  power: 0.8          # Statistical power (80% probability of detecting true effect)
+  
+  # Expected Treatment Effect
+  treatment_uplift: 0.02  # Expected uplift in treatment variant (2 percentage points)
+  
+  # Experiment Design
+  variants:
+    control:
+      name: control
+      description: "Original checkout flow"
+      traffic_allocation: 0.5
+    treatment:
+      name: treatment
+      description: "Redesigned checkout flow with optimizations"
+      traffic_allocation: 0.5
+  
+  # Primary Metrics
+  primary_metrics:
+    - conditional_conversion_rate  # Conversion rate from begin_checkout to order_completed
+  
+  # Secondary Metrics
+  secondary_metrics:
+    - cart_to_checkout_rate        # Rate from add_to_cart to begin_checkout
+    - average_order_value          # Average order value for completed orders
+    - checkout_completion_time     # Time from begin_checkout to order_completed
+    - step_abandonment_rates       # Abandonment at each checkout step
+    - form_error_rate              # Rate of form errors per checkout session
+    - payment_authorization_rate   # Rate of successful payment authorizations
+  
+  # Metrics Configuration
+  metrics:
+    primary: ccr
+    secondary:
+      - gross_conversion
+      - step_through_rates
+      - median_time_per_step
+      - form_error_rate
+    guardrails:
+      payment_auth_min_drop_pp: 0.3      # maximum allowed drop in percentage points
+      aov_min_drop_pct: 1.0              # maximum allowed percent decrease in AOV
+      payment_latency_p95_max_increase_ms: 150
+      refund_rate_max_increase_pp: 0.2
+  
+  # Decision Rule
+  decision_rule:
+    alpha: 0.05
+    power: 0.8                           # keep your existing power
+    mde_abs: 0.015                       # keep your existing MDE
+    require_no_guardrail_breaches: true
+    analysis_window: experiment
+    rollup: daily_and_total

@@ -87,3 +87,17 @@ target/
 
 # Mypy cache
 .mypy_cache/
+
+# Virtual environments
+venv/
+.venv/
+
+# DuckDB files
+*.duckdb
+*.duckdb.wal
+duckdb/*.db
+duckdb/*.duckdb
+
+# Raw and quarantine data
+data/raw/*
+data/quarantine/

@@ -1,0 +1,34 @@
+# Sensitivity Analysis Presets
+# =============================
+# Predefined parameter configurations for power/sensitivity analysis runs
+# Usage: Reference these presets when running src/analysis/sensitivity.py
+
+presets:
+  # Quick smoke test for validating the pipeline
+  quick_smoke:
+    description: "Minimal grid for fast validation and smoke testing"
+    days: 1
+    users_per_day: [20000]
+    uplifts: [0.0, 0.02]
+    repeats: 5
+    seed: 7
+    expected_runtime: "~2 minutes"
+    use_case: "CI/CD checks, quick pipeline validation"
+
+  # Full demonstration with comprehensive parameter sweep
+  full_demo:
+    description: "Comprehensive grid for power analysis and experiment planning"
+    days: 1
+    users_per_day: [20000, 50000, 100000]
+    uplifts: [0.0, 0.01, 0.02, 0.03]
+    repeats: 20
+    seed: 7
+    expected_runtime: "~10-15 minutes"
+    use_case: "Detailed power curves, sample size recommendations"
+
+# Notes:
+# - uplifts: 0.0 validates false positive rate (A/A test), others measure statistical power
+# - repeats: Higher values give more stable power estimates (recommended: ≥20 for production)
+# - users_per_day: Test range should bracket your expected daily traffic
+# - seed: Keep consistent for reproducibility across runs
+

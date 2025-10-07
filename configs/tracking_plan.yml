@@ -1,0 +1,201 @@
+# Tracking Plan for Checkout Flow Optimization
+# Defines event schemas and data types for analytics instrumentation
+
+events:
+  add_to_cart:
+    description: "Fired when a user adds item(s) to their shopping cart"
+    fields:
+      user_id:
+        type: string
+        required: true
+        description: "Unique identifier for the user"
+      session_id:
+        type: string
+        required: true
+        description: "Current session identifier"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      cart_value:
+        type: float
+        required: true
+        description: "Total cart value after adding items"
+      items_count:
+        type: int
+        required: true
+        description: "Number of items in cart after addition"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+
+  begin_checkout:
+    description: "Fired when user initiates the checkout process"
+    fields:
+      user_id:
+        type: string
+        required: true
+        description: "Unique identifier for the user"
+      checkout_id:
+        type: string
+        required: true
+        description: "Unique identifier for this checkout session"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+
+  checkout_step_view:
+    description: "Fired when a checkout step page is viewed"
+    fields:
+      checkout_id:
+        type: string
+        required: true
+        description: "Unique identifier for this checkout session"
+      step_name:
+        type: enum
+        required: true
+        values: [address, shipping, payment, review]
+        description: "Name of the checkout step"
+      step_index:
+        type: int
+        required: true
+        description: "Sequential index of the step (0-based)"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+      latency_ms:
+        type: int
+        required: true
+        description: "Page load latency in milliseconds"
+
+  form_error:
+    description: "Fired when a form validation error occurs during checkout"
+    fields:
+      checkout_id:
+        type: string
+        required: true
+        description: "Unique identifier for this checkout session"
+      step_name:
+        type: enum
+        required: true
+        values: [address, shipping, payment, review]
+        description: "Checkout step where error occurred"
+      field_name:
+        type: string
+        required: true
+        description: "Form field that triggered the error"
+      error_code:
+        type: string
+        required: true
+        description: "Error code or type"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+
+  payment_attempt:
+    description: "Fired when a payment is attempted"
+    fields:
+      checkout_id:
+        type: string
+        required: true
+        description: "Unique identifier for this checkout session"
+      payment_method:
+        type: enum
+        required: true
+        values: [card, paypal]
+        description: "Payment method used for the attempt"
+      authorized:
+        type: boolean
+        required: true
+        description: "Whether payment was successfully authorized"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+
+  order_completed:
+    description: "Fired when an order is successfully completed"
+    fields:
+      order_id:
+        type: string
+        required: true
+        description: "Unique identifier for the order"
+      checkout_id:
+        type: string
+        required: true
+        description: "Unique identifier for the checkout session"
+      user_id:
+        type: string
+        required: true
+        description: "Unique identifier for the user"
+      timestamp:
+        type: datetime
+        required: true
+        description: "ISO 8601 timestamp of the event"
+      order_value:
+        type: float
+        required: true
+        description: "Total order value"
+      currency:
+        type: string
+        required: true
+        description: "Currency code (ISO 4217)"
+      variant:
+        type: enum
+        required: true
+        values: [control, treatment]
+        description: "Experiment variant assignment"
+
+# Enum Definitions
+enums:
+  step_name:
+    description: "Valid checkout step names"
+    values:
+      - address
+      - shipping
+      - payment
+      - review
+
+  variant:
+    description: "Experiment variant assignment"
+    values:
+      - control
+      - treatment
+
+  payment_method:
+    description: "Supported payment methods"
+    values:
+      - card
+      - paypal
+
+  error_code:
+    description: "Form validation error codes"
+    values:
+      - invalid
+      - declined
+      - timeout

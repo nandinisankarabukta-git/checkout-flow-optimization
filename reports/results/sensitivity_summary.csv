@@ -1,0 +1,5 @@
+users_per_day,uplift,repeats,detections,detection_rate,alpha
+20000,0.0,10,0,0.0,0.05
+20000,0.02,10,6,0.6,0.05
+50000,0.0,10,1,0.1,0.05
+50000,0.02,10,10,1.0,0.05
