@@ -7,7 +7,7 @@ End-to-end orchestration through a single command (`make pipeline`), producing s
 
 ## Problem and Motivation
 
-E-commerce checkout abandonment remains a major challenge—industry research shows that **nearly 70% of shoppers abandon their carts** before completing a purchase. Each abandoned cart represents lost revenue and an opportunity to improve user experience.
+E-commerce checkout abandonment remains a major challenge, industry research shows that **nearly 70% of shoppers abandon their carts** before completing a purchase. Each abandoned cart represents lost revenue and an opportunity to improve user experience.
 
 ### The Challenge
 Product teams often propose UI and UX improvements (simplified forms, one-click payments, progress indicators), yet lack a **systematic way to validate** whether those changes truly increase conversion rates without negatively impacting other key metrics.
