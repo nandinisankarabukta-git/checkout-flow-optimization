@@ -92,10 +92,12 @@ Treatment effects simulate changes in success rates, error frequency, and step l
 
 ### Example Experiment: Simplified Checkout Flow
 
-**Scenario:** Testing a redesigned checkout flow with streamlined payment steps.  
+**Scenario:** Testing a redesigned checkout flow with streamlined payment steps.
+
 **Results:**
+
 | Metric | Control | Treatment | Lift | 95% CI | p-value | Significant? |
-|--------|----------|------------|------|---------|-----------|
+|--------|---------|-----------|------|---------|---------|--------------|
 | CCR (Orders/Adders) | 36.9% | 37.8% | +0.89pp | [-1.00pp, +2.79pp] | 0.3566 | ❌ |
 
 > **Decision:** *Inconclusive — Do not launch.*

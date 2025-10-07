@@ -5,7 +5,7 @@ A rigorous A/B testing framework for evaluating checkout flow improvements
 
 ## Project Overview
 
-E-commerce checkout abandonment costs businesses billions annually. When users add items to their cart but fail to complete the purchase, we lose revenue and miss opportunities to serve customers. This project provides a complete experimentation framework to test whether a redesigned checkout flow increases the **Conditional Conversion Rate (CCR)** — the percentage of users who add to cart and successfully complete their order. We use synthetic data to demonstrate best practices in A/B testing: statistical rigor, guardrail monitoring, power analysis, and clear decision frameworks. The goal is to make data-driven launch decisions that balance revenue growth with user experience quality.
+E-commerce checkout abandonment costs businesses billions annually. When users add items to their cart but fail to complete the purchase, we lose revenue and miss opportunities to serve customers. This project provides a complete experimentation framework to test whether a redesigned checkout flow increases the **Conditional Conversion Rate (CCR)** , the percentage of users who add to cart and successfully complete their order. We use synthetic data to demonstrate best practices in A/B testing: statistical rigor, guardrail monitoring, power analysis, and clear decision frameworks. The goal is to make data-driven launch decisions that balance revenue growth with user experience quality.
 
 ## Data Pipeline Summary
 
