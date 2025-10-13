@@ -101,3 +101,15 @@ duckdb/*.duckdb
 # Raw and quarantine data
 data/raw/*
 data/quarantine/
+
+# Generated reports and results
+reports/results/*
+reports/figures/*.csv
+reports/figures/*.png
+reports/REPORT.md
+
+# Package build artifacts
+src.egg-info/
+
+# Media files (videos, large images)
+# Note: dashboard_walkthrough.mov is intentionally tracked for documentation

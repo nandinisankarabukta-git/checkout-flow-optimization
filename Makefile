@@ -5,7 +5,7 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
+BUCKET = your-s3-bucket-name
 PROFILE = default
 PROJECT_NAME = checkout-flow-optimization
 PYTHON_INTERPRETER = python3

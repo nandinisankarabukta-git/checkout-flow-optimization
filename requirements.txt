@@ -2,13 +2,10 @@
 -e .
 
 # external requirements
-click
-Sphinx
-coverage
-awscli
-flake8
-python-dotenv>=0.5.1
 jinja2
+
+# development tools
+flake8
 
 # data analysis and visualization
 duckdb
@@ -17,11 +14,11 @@ pyarrow
 streamlit
 scipy
 statsmodels
-pandera
-pydantic
-rich
 
 # additional useful libraries
 matplotlib
-altair
-polars
+
+# documentation
+sphinx
+sphinx-rtd-theme
+myst-parser

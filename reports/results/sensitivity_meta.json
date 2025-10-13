@@ -1,18 +1,21 @@
 {
-  "generated_at_utc": "2025-10-06T22:45:27.209212Z",
+  "generated_at_utc": "2025-10-13T00:54:21.704001Z",
   "alpha": 0.05,
   "grid_specification": {
     "users_per_day": [
       20000,
-      50000
+      50000,
+      100000
     ],
     "uplifts": [
       0.0,
-      0.02
+      0.01,
+      0.02,
+      0.03
     ],
-    "grid_size": 4
+    "grid_size": 12
   },
-  "repeats": 10,
-  "total_simulations": 40,
-  "git_commit": "794c2cb325d85b5b4f4b2dc1f2e69048edd9c98c"
+  "repeats": 20,
+  "total_simulations": 240,
+  "git_commit": "0c79022f43910076c89c88956db20efb10de2c89"
 }

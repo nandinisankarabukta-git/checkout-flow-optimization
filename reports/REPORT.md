@@ -1,6 +1,6 @@
 # Checkout Flow Optimization Report
 
-**Generated:** 2025-10-06 21:13:30  
+**Generated:** 2025-10-13 12:36:45  
 **Date:** 2025-01-04
 
 ---
@@ -25,17 +25,19 @@ p-value: 0.3566 (Not significant)
 
 ## Sensitivity Analysis
 
-**Grid Size:** 4 parameter combinations  
-**Total Simulations:** 40  
+**Grid Size:** 12 parameter combinations  
+**Total Simulations:** 240  
 
 **Detection Rate near MDE (1.5pp):**  
-- Closest tested: 60.0% power with 20,000 users/day at 2.0pp uplift (6/10 detections)
+- 65.0% power with 100,000 users/day at 1.0pp uplift (13/20 detections)
 
 **Power by Uplift:**
 
 | Uplift | Best Power | Users/Day | Detections |
 |--------|------------|-----------|------------|
-| 2.0pp | 100.0% | 50,000 | 10/10 |
+| 1.0pp | 65.0% | 100,000 | 13/20 |
+| 2.0pp | 100.0% | 100,000 | 20/20 |
+| 3.0pp | 100.0% | 50,000 | 20/20 |
 
 ---
 
@@ -59,7 +61,7 @@ p-value: 0.3566 (Not significant)
 
 # Executive Summary: checkout_redesign_v1
 
-**Date Generated:** 2025-10-06
+**Date Generated:** 2025-10-13
 
 ---
 
@@ -111,5 +113,5 @@ p-value: 0.3566 (Not significant)
 
 ---
 
-*This summary is generated from A/B test results. For detailed analysis, see the full report at `reports/REPORT.md` or explore the interactive dashboard.*
+*This summary is generated from A/B test results. For detailed analysis, explore the interactive dashboard.*
 

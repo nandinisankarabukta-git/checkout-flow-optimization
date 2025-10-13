@@ -226,7 +226,7 @@ with tab0:
 
     st.markdown("""
     This dashboard provides real-time insights into the A/B test evaluating a redesigned checkout flow. 
-    The primary metric is **Conditional Conversion Rate (CCR)** — the percentage of users who add items 
+    The primary metric is **Conditional Conversion Rate (CCR)**, the percentage of users who add items 
     to cart and successfully complete their order.
     
     **Goal:** Increase CCR by at least 1.5pp (the Minimum Detectable Effect) without harming guardrail metrics.
