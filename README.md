@@ -22,8 +22,6 @@ Launching an untested checkout change can:
 ### The Goal
 To build a **production-grade A/B testing framework** that allows confident, data-driven ship/no-ship decisions using **statistical evidence**, not intuition.
 
----
-
 ## Project Steps
 
 ### 1) Defining the Problem
