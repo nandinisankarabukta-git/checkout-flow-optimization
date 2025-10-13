@@ -48,8 +48,6 @@ Since no real e-commerce data was available, a **synthetic dataset** was created
 
 This approach produced data that was reproducible, realistic, and aligned with how real event logs work in production systems.
 
-*See [`src/data/simulate.py`](src/data/simulate.py) for implementation details.*
-
 ### 4) Building the Pipeline
 The project followed the **Cookiecutter Data Science** structure to keep everything organized and reproducible.  
 Each step of the pipeline was automated using a `Makefile`:
@@ -66,8 +64,9 @@ This setup mirrors how production-grade data pipelines are managed — modular, 
 
 *See [`docs/commands.rst`](docs/commands.rst) for detailed command explanations.*
 
-### 5) Statistical Analysis and Experiment Evaluation
-A statistical comparison was performed between the control and treatment variants using a **two-proportion z-test**.
+### 5) Statistical Analysis and Results
+
+Once the data was prepared, the project compared how the control and treatment groups performed.  
 
 | Metric | Control | Treatment | Change | p-value | Significance |
 |--------|----------|-----------|---------|----------|---------------|
@@ -75,13 +74,20 @@ A statistical comparison was performed between the control and treatment variant
 | Payment Auth Rate | 91.8% | 92.9% | +1.2pp | — | Pass |
 | Avg Order Value | $256.82 | $259.19 | +$2.37 | — | Pass |
 
-Even though the treatment showed a higher conversion rate, the difference was not statistically significant at a 95% confidence level.  
-However, all **guardrails passed**, meaning the new checkout design did not negatively impact other business metrics.
+In plain terms, the new checkout design showed a **slightly higher conversion rate** (37.8% vs. 36.9%), but the improvement wasn’t large enough to be statistically significant.  
+The p-value (0.3566) indicates that the difference could easily have occurred by random chance.  
+
+However, the experiment confirmed something equally important — the treatment didn’t harm any **guardrail metrics**.  
+Payment success rates and average order values both stayed healthy, meaning the new design is at least as safe and stable as the existing one.
+
+In real-world terms, this is a valuable result: the team can safely run the test longer or with more traffic before deciding whether to roll out the new design.
 
 ### 6) Sensitivity and Power Analysis
-To understand data requirements for future experiments, a **power analysis** was run.  
-It showed that detecting a 1.5 percentage point lift would require roughly **50,000 users per variant** to achieve 80% statistical power.  
-This step demonstrated the real-world trade-off between traffic volume, experiment duration, and confidence level.
+To understand how much data would be needed to reach a reliable conclusion, a **power analysis** was performed.  
+It found that detecting a 1.5 percentage point lift would require around **50,000 users per variant** to achieve 80% power.  
+
+This explains why the experiment result, while positive, was statistically inconclusive — the sample size was too small to confidently prove the effect.  
+This mirrors what often happens in real A/B testing, where promising results need larger datasets or longer run times to reach statistical confidence.
 
 ### 7) Visualization and Reporting
 The project includes both static and interactive reporting components:
@@ -89,22 +95,15 @@ The project includes both static and interactive reporting components:
 - Automatically generated **Markdown reports** summarizing metrics and results  
 - A **Streamlit dashboard** for interactive exploration of conversion funnels, variant comparisons, and sensitivity results  
 
-This made the insights accessible both for technical reviewers and business stakeholders.
+These reports make it easy for both analysts and business teams to interpret results and decide next steps.
 
-### 8) Deployment and Reproducibility
-The project is fully reproducible and designed to mimic enterprise-grade experimentation setups:
+## Dashboard Walkthrough
 
-- **Automation:** All processes are orchestrated with `make`  
-- **Database:** DuckDB serves as a local analytical warehouse  
-- **Dashboard:** Deployable on Streamlit Community Cloud for sharing  
-- **Reproducibility:** Every stage (from data generation to reporting) can be re-run with the same outcome  
+See the interactive dashboard in action:
 
-### 9) Insights and Learnings
-- Even small changes in conversion rates can create significant business impact.  
-- Proper statistical rigor is essential; a positive trend isn’t enough without confidence.  
-- Most experiments are *inconclusive* early on — success lies in the process, not just the result.  
-- The framework can be reused for any A/B test scenario, not just checkout flows.  
-
----
+<video controls autoplay loop muted>
+  <source src="docs/media/dashboard_walkthrough.mov" type="video/quicktime">
+  Your browser does not support the video tag.
+</video>
 
 *For detailed setup commands and execution steps, see [Getting Started Guide](docs/getting-started.rst).*  
