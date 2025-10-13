@@ -62,8 +62,6 @@ make report     # Generate summary report
 
 This setup mirrors how production-grade data pipelines are managed — modular, consistent, and version-controlled.
 
-*See [`docs/commands.rst`](docs/commands.rst) for detailed command explanations.*
-
 ### 5) Statistical Analysis and Results
 
 Once the data was prepared, the project compared how the control and treatment groups performed.  
@@ -101,9 +99,6 @@ These reports make it easy for both analysts and business teams to interpret res
 
 See the interactive dashboard in action:
 
-<video controls autoplay loop muted>
-  <source src="docs/media/dashboard_walkthrough.mov" type="video/quicktime">
-  Your browser does not support the video tag.
-</video>
+![Dashboard Walkthrough](docs/media/dashboard_walkthrough.mov)
 
 *For detailed setup commands and execution steps, see [Getting Started Guide](docs/getting-started.rst).*  
