@@ -95,10 +95,4 @@ The project includes both static and interactive reporting components:
 
 These reports make it easy for both analysts and business teams to interpret results and decide next steps.
 
-## Dashboard Walkthrough
-
-See the interactive dashboard in action:
-
-![Dashboard Walkthrough](docs/media/dashboard_walkthrough.mov)
-
 *For detailed setup commands and execution steps, see [Getting Started Guide](docs/getting-started.rst).*  
