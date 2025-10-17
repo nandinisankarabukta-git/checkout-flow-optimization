@@ -73,7 +73,7 @@ Once the data was prepared, the project compared how the control and treatment g
 In plain terms, the new checkout design showed a **slightly higher conversion rate** (37.8% vs. 36.9%), but the improvement wasn’t large enough to be statistically significant.  
 The p-value (0.3566) indicates that the difference could easily have occurred by random chance.  
 
-However, the experiment confirmed something equally important — the treatment didn’t harm any **guardrail metrics**.  
+However, the experiment confirmed something equally important, the treatment didn’t harm any **guardrail metrics**.  
 Payment success rates and average order values both stayed healthy, meaning the new design is at least as safe and stable as the existing one.
 
 In real-world terms, this is a valuable result: the team can safely run the test longer or with more traffic before deciding whether to roll out the new design.
@@ -82,7 +82,7 @@ In real-world terms, this is a valuable result: the team can safely run the test
 To understand how much data would be needed to reach a reliable conclusion, a **power analysis** was performed.  
 It found that detecting a 1.5 percentage point lift would require around **50,000 users per variant** to achieve 80% power.  
 
-This explains why the experiment result, while positive, was statistically inconclusive — the sample size was too small to confidently prove the effect.  
+This explains why the experiment result, while positive, was statistically inconclusive: the sample size was too small to confidently prove the effect.  
 This mirrors what often happens in real A/B testing, where promising results need larger datasets or longer run times to reach statistical confidence.
 
 ### 7) Visualization and Reporting
