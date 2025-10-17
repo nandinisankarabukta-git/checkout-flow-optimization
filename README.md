@@ -58,7 +58,7 @@ make results    # Run statistical tests
 make report     # Generate summary report
 ```
 
-This setup mirrors how production-grade data pipelines are managed — modular, consistent, and version-controlled.
+This setup mirrors how production-grade data pipelines are managed: modular, consistent, and version-controlled.
 
 ### 5) Statistical Analysis and Results
 
