@@ -7,7 +7,7 @@
 E-commerce checkout abandonment remains a critical business challenge across the industry. Research consistently shows that **nearly 70% of shoppers abandon their carts** before completing a purchase, representing millions in lost revenue and missed opportunities.
 
 ### The Challenge
-Product and engineering teams frequently propose UI/UX improvements—simplified forms, one-click payments, progress indicators—yet lack a **systematic, rigorous way to validate** whether these changes actually increase conversion rates without degrading other key business metrics.
+Product and engineering teams frequently propose UI/UX improvements such as simplified forms, one-click payments, progress indicators yet lack a **systematic, rigorous way to validate** whether these changes actually increase conversion rates without degrading other key business metrics.
 
 ### The Stakes
 Launching an untested checkout redesign can have severe consequences:
@@ -50,66 +50,84 @@ Since no real e-commerce data was available for this project, a **synthetic data
 
 ## 3. Approach and Methodology
 
-### 3.1 Data Understanding and Simulation
-Since no real e-commerce data was available, a synthetic dataset was created to mimic real checkout behavior:
+### 3.1 Data Simulation
 
-**Data Generation Process:**
-- Simulated user journeys through a multi-step checkout funnel
-- Introduced realistic variability: drop-offs, form errors, latency, failed payments
-- Embedded a small treatment effect (+2pp lift) to test detection capabilities
-- Stored data in production-like partitioned Parquet format
+**Implementation (`src/data/simulate.py`):**
+- Simulated 10,000 user sessions per day over 4 days
+- Users deterministically assigned to control or treatment using hash-based randomization
+- Modeled realistic funnel drop-offs at each stage: add_to_cart → begin_checkout → checkout_steps → payment_attempt → order_completed
+- Injected treatment effect: +2pp lift in conversion probability for treatment group
+- Generated correlated events: form errors, payment declines, latency variations
+- Stored as partitioned Parquet files by event type and date
 
-**Key Insights from Exploration:**
-- Checkout abandonment occurs most frequently between `add_to_cart` and `begin_checkout` (~40% drop-off)
+### 3.2 Data Warehousing and Transformation
+Built an analytical data warehouse to enable efficient querying:
+
+**DuckDB Warehouse (`sql/schema.sql`):**
+- Created event views for each event type (add_to_cart, begin_checkout, etc.)
+- Registered Parquet files as queryable tables using DuckDB's native file reading
+
+**Analytical Marts (`sql/marts/`):**
+- `fct_experiments`: User-level variant assignments and first exposure timestamps
+- `fct_checkout_steps`: Aggregated step-through rates by variant
+- `fct_orders`: Order-level metrics (order value, payment status, etc.)
+
+### 3.3 Data Quality Validation
+Implemented automated data quality checks (`src/quality.py`):
+
+**Validation Tests:**
+- **Referential Integrity:** Verified all orders and checkout steps reference valid checkout sessions
+- **Sample Ratio Mismatch (SRM):** Confirmed 50/50 traffic split between variants
+- **Business Logic:** Validated payment authorization rates fall within expected ranges (85-95%)
+- **Event Sequencing:** Checked that funnel events occur in correct chronological order
+
+### 3.4 Exploratory Data Analysis
+Conducted systematic exploration through Jupyter notebooks:
+
+**Notebooks:**
+- `01_exploration.ipynb`: Event volume analysis, funnel visualization, initial variant comparison
+- `02_stats_sanity.ipynb`: Statistical test validation, confidence interval checks
+- `03_power_sensitivity.ipynb`: Power analysis and sample size calculations
+- `04_experiment_readout.ipynb`: Comprehensive A/B test results analysis and decision framework
+- `05_diagnostics_deep_dive.ipynb`: Deep dive into guardrail metrics and outlier investigation
+
+**Key Findings:**
+- Highest drop-off between add_to_cart and begin_checkout (~40%)
 - Payment authorization failures affect ~8-10% of transactions
-- Average order value clusters around $250-$260
+- Average order value stable around $250-$260
+- No systematic differences in form error rates between variants
 
-### 3.2 Exploratory Data Analysis
-Exploratory analysis focused on understanding funnel dynamics:
+### 3.5 Experiment Design and Statistical Framework
+Designed the experiment following A/B testing best practices:
 
-- **Funnel Visualization:** Tracked conversion rates at each step
-- **Variant Comparison:** Compared treatment vs. control behavior across all stages
-- **Outlier Detection:** Identified anomalous order values and session patterns
-- **Data Quality Checks:** Validated event sequencing and timestamp consistency
+**Randomization Strategy:**
+- Hash-based deterministic assignment (MD5 of user_id) ensures stable variant membership
+- 50/50 traffic split between control and treatment
+- No overlap between variants (mutually exclusive)
 
-### 3.3 Feature Engineering
-Built analytical features for statistical testing:
+**Statistical Framework (`src/analysis/stats_framework.py`):**
+- **Primary Test:** Two-proportion z-test with pooled variance for CCR comparison
+- **Confidence Intervals:** 95% CI for absolute and relative effect sizes
+- **Guardrail Tests:** Proportion and mean comparison for secondary metrics
+- **Alpha Level:** 0.05 (5% false positive rate)
 
-- **User-level aggregations:** Sessions per user, total cart value, checkout attempts
-- **Funnel metrics:** Conversion rates at each stage, time-to-conversion
-- **Behavioral flags:** Form error occurrences, payment retry behavior
+**Metrics Implementation (`src/analysis/metrics_runner.py`):**
+- Automated metric calculation from DuckDB warehouse
+- Variant comparison with statistical significance testing
+- Guardrail threshold evaluation
 
-### 3.4 Experiment Design and Statistical Framework
-The experiment was designed following industry best practices:
+### 3.6 Power and Sensitivity Analysis
+Performed power analysis to understand sample size requirements:
 
-**Randomization:**
-- Users randomly assigned to Control (Variant A) or Treatment (Variant B)
-- 50/50 traffic split
+**Sensitivity Analysis (`src/analysis/sensitivity.py`):**
+- Simulated experiments across different sample sizes (20k, 50k users per variant)
+- Tested detection rates for effect sizes ranging from 0 to 2pp
+- Calculated power curves for different MDE (Minimum Detectable Effect) targets
+- Results saved to `reports/results/sensitivity_summary.csv`
 
-**Statistical Approach:**
-- **Test Type:** Two-proportion z-test for conversion rate comparison
-- **Significance Level:** α = 0.05
-- **Minimum Detectable Effect (MDE):** 1.5 percentage points
-- **Power Target:** 80%
-
-**Implementation:**
-- Built a reusable `stats_framework.py` module for hypothesis testing
-- Automated metric calculation and guardrail evaluation
-- Generated sensitivity analysis to determine required sample sizes
-
-### 3.5 Model Training and Validation
-While this is primarily an A/B testing project (not a predictive modeling project), the analytical pipeline includes:
-
-- **Validation Strategy:** Historical data used to validate simulation realism
-- **Cross-validation:** Ensured consistent treatment effects across date partitions
-- **Robustness Checks:** Tested results stability with different random seeds
-
-### 3.6 Statistical Testing and Results Interpretation
-Statistical tests were run to compare variants:
-
-1. **Primary Metric Test:** Z-test on conditional conversion rate difference
-2. **Guardrail Checks:** Validated that treatment didn't degrade secondary metrics
-3. **Power Analysis:** Calculated required sample size for conclusive results
+**Key Finding (`03_power_sensitivity.ipynb`):**
+- Detecting a 1.5pp lift requires ~50,000 users per variant for 80% power
+- Current sample size (~5,000 per variant) has <50% power for detecting small effects
 
 ## 4. Results and Business Impact
 
@@ -158,8 +176,15 @@ This project is structured as a **production-ready analytics pipeline** with aut
 make simulate   # Generate synthetic event data
 make build      # Initialize DuckDB warehouse
 make marts      # Build analytical fact tables
-make results    # Run statistical tests
+make quality    # Run data quality checks
+make results    # Run statistical tests and save results
 make report     # Generate summary reports
+make app        # Launch Streamlit dashboard
+```
+
+Or run the complete pipeline at once:
+```bash
+make pipeline   # Runs: simulate → build → marts → quality → results → report
 ```
 
 **Technology Stack:**
