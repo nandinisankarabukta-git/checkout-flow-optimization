@@ -207,7 +207,3 @@ These reports make it easy for both analysts and business teams to interpret res
 ## 6. How to Run / Installation
 
 For detailed setup instructions, environment configuration, and step-by-step execution commands, see the **[Getting Started Guide](docs/getting-started.rst)**.
-
-## 7. Acknowledgments
-
-This project structure follows the **Cookiecutter Data Science** template, which promotes reproducible, well-organized analytics projects.
